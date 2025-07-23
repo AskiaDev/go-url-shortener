@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+    redis:
+        image: redis:7-alpine
+        container_name: url-shortener-redis
+        ports:
+            - "6379:6379"
+        volumes:
+            - redis_data:/data
+        command: redis-server --appendonly yes
+        networks:
+            - url-shortener-network
+
+    app:
+        build: .
+        container_name: url-shortener-app
+        ports:
+            - "8080:8080"
+        environment:
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+        depends_on:
+            - redis
+        networks:
+            - url-shortener-network
+        restart: unless-stopped
+
+volumes:
+    redis_data:
+
+networks:
+    url-shortener-network:
+        driver: bridge
