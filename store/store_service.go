@@ -41,7 +41,7 @@ func InitializeStore() *StorageService {
 
 
 func SaveUrlMapping(shortUrl string, originalUrl string, userId string) {
-	err := storeService.redisClient.Set(ctx, shortUrl, originalUrl, CacheDuration)
+	err := storeService.redisClient.Set(ctx, shortUrl, originalUrl, CacheDuration).Err()
 
 	if err != nil {
 		panic(fmt.Sprintf("Failed to save url mapping: %v", err))
